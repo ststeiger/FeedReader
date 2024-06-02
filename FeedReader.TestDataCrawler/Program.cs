@@ -25,6 +25,8 @@ namespace CodeHollow.FeedReader.TestDataCrawler
 
         static void Do(string url)
         {
+            url = "https://nymag.com/";
+
             var linksTask = FeedReader.GetFeedUrlsFromUrlAsync(url);
 
             foreach (var link in linksTask.Result)

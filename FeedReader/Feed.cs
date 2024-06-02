@@ -1,9 +1,7 @@
 ﻿namespace CodeHollow.FeedReader
 {
     using Feeds;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+
 
     /// <summary>
     /// Generic Feed object that contains some basic properties. If a property is not available
@@ -53,7 +51,7 @@
         /// The last updated date as datetime. Null if parsing failed or if
         /// no last updated date is set. If null, please check <see cref="LastUpdatedDateString"/> property.
         /// </summary>
-        public DateTime? LastUpdatedDate { get; set; }
+        public System.DateTime? LastUpdatedDate { get; set; }
 
         /// <summary>
         /// The url of the image
@@ -63,7 +61,7 @@
         /// <summary>
         /// List of items
         /// </summary>
-        public IList<FeedItem> Items { get; set; }
+        public System.Collections.Generic.IList<FeedItem> Items { get; set; }
 
         /// <summary>
         /// Gets the whole, original feed as string
@@ -99,7 +97,55 @@
             Title = feed.Title;
             Link = feed.Link;
 
-            Items = feed.Items.Select(x => x.ToFeedItem()).ToList();
+            Items = System.Linq.Enumerable.ToList( System.Linq.Enumerable.Select(feed.Items, x => x.ToFeedItem()));
         }
+
+
+        private static System.Text.Encoding GetXmlEncoding(string xmlString)
+        {
+            if (string.IsNullOrEmpty(xmlString))
+            {
+                throw new System.ArgumentException("The XML string cannot be null or empty.");
+            }
+
+            using (System.IO.StringReader stringReader = new System.IO.StringReader(xmlString))
+            {
+                System.Xml.XmlReaderSettings settings = new System.Xml.XmlReaderSettings();
+                settings.DtdProcessing = System.Xml.DtdProcessing.Parse;
+
+                using (System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(stringReader, settings))
+                {
+                    if (xmlReader.Read())
+                    {
+                        // Check if the current node is an XML declaration
+                        if (xmlReader.NodeType == System.Xml.XmlNodeType.XmlDeclaration)
+                        {
+                            string encoding = xmlReader.GetAttribute("encoding");
+                            if (!string.IsNullOrEmpty(encoding))
+                            {
+                                return System.Text.Encoding.GetEncoding(encoding);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            // Default to UTF-8 if encoding is not specified in the XML declaration
+            return System.Text.Encoding.UTF8;
+        }
+
+
+        /// <summary>
+        /// Save the feed as file 
+        /// </summary>
+        /// <param name="path"></param>
+        public void SaveAs(string path)
+        {
+            System.Text.Encoding enc = GetXmlEncoding(this.OriginalDocument);
+            System.IO.File.WriteAllText(path, this.OriginalDocument, enc);
+        }
+
+
     }
 }
