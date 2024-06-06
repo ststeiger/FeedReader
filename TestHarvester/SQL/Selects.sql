@@ -17,7 +17,11 @@ SELECT
 	,feed_last_updated_date 
 	,feed_image_url 
 	,feed_original_document 
+	,feed_image 
 FROM feed_data.feed 
+
+-- http://feeds.feedburner.com/nymag/intelligencer
+
 
 
 SELECT 
@@ -30,6 +34,8 @@ SELECT
 	,item_author 
 	,item_content 
 FROM feed_data.feed_item 
+
+
 
 SELECT 
 	 itunes_id 

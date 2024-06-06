@@ -3,7 +3,7 @@ using TestHarvester.Db;
 
 namespace TestHarvester
 {
-    
+
 
     internal class Program
     {
@@ -11,7 +11,8 @@ namespace TestHarvester
 
         public static string ProjectDirectory
         {
-            get {
+            get
+            {
                 string bd = System.AppDomain.CurrentDomain.BaseDirectory;
                 bd = System.IO.Path.Combine(bd, "..", "..", "..");
                 bd = System.IO.Path.GetFullPath(bd);
@@ -27,26 +28,39 @@ namespace TestHarvester
             DatabaseManager dbm = new DatabaseManager(factory);
 
             string harvestDirectory = System.IO.Path.Combine(ProjectDirectory, "Harvested");
-            
-            string feedFile = System.IO.Path.Combine(harvestDirectory, "myfeed.rss");
             CodeHollow.FeedReader.Feed? feed = null; // CodeHollow.FeedReader.FeedReader.ReadFromString("xml");
 
+#if false
+            // string feedFile = System.IO.Path.Combine(harvestDirectory, "arminreiter.rss");
+            // string feedFile = System.IO.Path.Combine(harvestDirectory, "nymag_intelligencer.rss");
+            string feedFile = System.IO.Path.Combine(harvestDirectory, "finews.rss");
+            
             if (System.IO.File.Exists(feedFile))
                 feed = await CodeHollow.FeedReader.FeedReader.ReadFromFileAsync(feedFile);
-            
+#endif
             if (feed == null)
             {
-                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync("https://arminreiter.com/feed");
-                feed.SaveAs(feedFile);
+                string a = "https://arminreiter.com/feed";
+                string b = "https://feeds.feedburner.com/nymag/intelligencer";
+                string c = "https://www.finews.ch/news?format=feed&type=rss";
+                string d = "https://chaosradio.de/feed/m4a";
+                string e = "https://insideparadeplatz.ch/feed/";
+                string f = "https://www.inside-it.ch/rss.xml";
+                string g = "https://feeds.feedburner.com/visualcapitalist";
+                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync(g);
+
+                // feed.SaveAs(feedFile);
             } // End if (feed == null) 
 
 
+            if (feed.ImageUrl != null)
+            {
+                string imagePath = System.IO.Path.Combine(harvestDirectory, System.IO.Path.GetFileName(feed.ImageUrl));
+                string extension = System.IO.Path.GetFileName(feed.ImageUrl);
 
-            string imagePath = System.IO.Path.Combine(harvestDirectory, System.IO.Path.GetFileName(feed.ImageUrl));
-            string extension = System.IO.Path.GetFileName(feed.ImageUrl);
-            if(!System.IO.File.Exists(imagePath))
-                await StreamDownloader.DownloadFileAsync(feed.ImageUrl, imagePath);
-
+                if (!System.IO.File.Exists(imagePath))
+                    await StreamDownloader.DownloadFileAsync(feed.ImageUrl, imagePath);
+            }
 
             System.Console.WriteLine("Feed Link: " + feed.Link);
             System.Console.WriteLine("Feed Type: " + feed.Type);
@@ -55,7 +69,8 @@ namespace TestHarvester
             System.Console.WriteLine("Feed Image: " + feed.ImageUrl);
             System.Console.WriteLine("Feed LastUpdatedDate: " + feed.LastUpdatedDate);
             System.Console.WriteLine("Feed Copyright: " + feed.Copyright);
-            System.Console.WriteLine("Feed Language: " + feed.Language);
+            if (feed.Type == CodeHollow.FeedReader.FeedType.Atom)
+                System.Console.WriteLine("Feed Language: " + feed.Language);
 
             // System.Console.WriteLine("Feed OriginalDocument: " + feed.OriginalDocument);
 
@@ -90,7 +105,7 @@ namespace TestHarvester
             {
 
                 int feedId = dbm.InsertFeed(feed);
-                
+
 
                 foreach (CodeHollow.FeedReader.FeedItem? item in feed.Items)
                 {
@@ -104,7 +119,7 @@ namespace TestHarvester
                     System.Console.WriteLine(item.Categories);
                     System.Console.WriteLine(item.PublishingDate);
                     System.Console.WriteLine(item.SpecificItem);
-                    
+
                     CodeHollow.FeedReader.Feeds.Itunes.ItunesItem itu = CodeHollow.FeedReader.Feeds.Itunes.ItunesExtensions.GetItunesItem(item);
                     if (itu != null)
                     {

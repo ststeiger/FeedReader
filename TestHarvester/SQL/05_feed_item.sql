@@ -6,14 +6,14 @@ CREATE TABLE feed_data.feed_item
 (
    item_id int NOT NULL CONSTRAINT df_FeedItem_item_id DEFAULT NEXT VALUE FOR feed_data.seq_feed_item_item_id 
   ,item_feed_id int 
-  ,item_title nvarchar(255) 
-  ,item_link nvarchar(255) 
-  ,item_description nvarchar(MAX) 
-  ,item_publishing_date datetime2(7) 
-  ,item_author nvarchar(255) 
-  
-  ,item_content nvarchar(MAX) 
-  ,PRIMARY KEY(item_id) 
+  ,item_title national character varying(255) 
+  ,item_link national character varying(255) 
+  ,item_description national character varying(MAX) 
+  ,item_publishing_date datetime 
+  ,item_author national character varying(255) 
+   
+  ,item_content national character varying(MAX) 
+  ,CONSTRAINT pk_feed_item PRIMARY KEY(item_id) 
 );
 
 ALTER TABLE feed_data.feed_item WITH CHECK ADD CONSTRAINT fk_feed_item_feed 
