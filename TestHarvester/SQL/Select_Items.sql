@@ -24,3 +24,5 @@ FROM feed_data.feed_item
 
 LEFT JOIN feed_data.itunes_item 
 	ON itunes_item.itunes_item_id = feed_item.item_id
+
+WHERE (1=1) 

@@ -47,7 +47,8 @@ namespace TestHarvester
                 string e = "https://insideparadeplatz.ch/feed/";
                 string f = "https://www.inside-it.ch/rss.xml";
                 string g = "https://feeds.feedburner.com/visualcapitalist";
-                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync(g);
+                string h = "https://infosperber.ch/shoutemfeed";
+                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync(h);
 
                 // feed.SaveAs(feedFile);
             } // End if (feed == null) 
