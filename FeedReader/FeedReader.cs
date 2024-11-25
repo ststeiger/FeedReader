@@ -174,7 +174,7 @@
         /// <returns>parsed feed</returns>
         public static async Task<Feed> ReadAsync(string url, CancellationToken cancellationToken, bool autoRedirect = true, string userAgent=null)
         {
-            var feedContent = await Helpers.DownloadBytesAsync(GetAbsoluteUrl(url), cancellationToken, autoRedirect, userAgent).ConfigureAwait(false);
+            byte[] feedContent = await Helpers.DownloadBytesAsync(GetAbsoluteUrl(url), cancellationToken, autoRedirect, userAgent).ConfigureAwait(false);
             return ReadFromByteArray(feedContent);
         }
 

@@ -56,7 +56,11 @@
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             {
                 request.Headers.TryAddWithoutValidation(ACCEPT_HEADER_NAME, ACCEPT_HEADER_VALUE);
-                request.Headers.TryAddWithoutValidation(USER_AGENT_NAME, userAgent);
+
+                if(userAgent != null)
+                    request.Headers.TryAddWithoutValidation(USER_AGENT_NAME, userAgent);
+                else 
+                    request.Headers.TryAddWithoutValidation("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
 
                 response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
             }

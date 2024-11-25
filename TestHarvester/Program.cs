@@ -1,4 +1,5 @@
 ﻿
+using System.Net.Http;
 using TestHarvester.Db;
 
 namespace TestHarvester
@@ -24,6 +25,7 @@ namespace TestHarvester
 
         public static async System.Threading.Tasks.Task<int> Main(string[] args)
         {
+            // await dasfasdf.SendRequest();
             ConnectionFactory factory = DevHelper.GetTestFactory();
             DatabaseManager dbm = new DatabaseManager(factory);
 
@@ -48,7 +50,19 @@ namespace TestHarvester
                 string f = "https://www.inside-it.ch/rss.xml";
                 string g = "https://feeds.feedburner.com/visualcapitalist";
                 string h = "https://infosperber.ch/shoutemfeed";
-                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync(h);
+                string i = "https://blog.jetbrains.com/dotnet/feed/";
+
+
+
+
+                // _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
+                // _httpClient.DefaultRequestHeaders.Add("cookiet", "optimizelyEndUserId=oeu1712250794853r0.0004132956892901607; JBA=50a7b089-2873-4bb2-887a-f41db7f13a24; wp-wpml_current_language=en; AWSALB=oXo2jFgmXc1bPh9KmrvX6qDzXJfjWk9K60PcAKaXN4iIgbXcuCgydb9G4UdPOq3qNdnCn9vdsBu7RtTMtvBf2rr4gCPTsf0/T/LOSSnzDGkVM/+POSlI9iQhoN6K; AWSALBCORS=oXo2jFgmXc1bPh9KmrvX6qDzXJfjWk9K60PcAKaXN4iIgbXcuCgydb9G4UdPOq3qNdnCn9vdsBu7RtTMtvBf2rr4gCPTsf0/T/LOSSnzDGkVM/+POSlI9iQhoN6K");
+                // _httpClient.DefaultRequestHeaders.Referrer = new System.Uri("https://blog.jetbrains.com/dotnet/tag/rider/");
+
+
+                // _httpClient.DefaultRequestHeaders.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+
+                feed = await CodeHollow.FeedReader.FeedReader.ReadAsync(i);
 
                 // feed.SaveAs(feedFile);
             } // End if (feed == null) 
@@ -107,7 +121,6 @@ namespace TestHarvester
 
                 int feedId = dbm.InsertFeed(feed);
 
-
                 foreach (CodeHollow.FeedReader.FeedItem? item in feed.Items)
                 {
                     int feedItem = dbm.InsertFeedItem(item, feedId);
@@ -141,7 +154,7 @@ namespace TestHarvester
 
             } // End Block  or Else 
 
-            System.Console.WriteLine(System.Environment.NewLine);
+             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(System.Environment.NewLine);
             System.Console.WriteLine(" --- Press any key to continue --- ");
             System.Console.ReadKey();
